@@ -19,6 +19,11 @@ import { Board } from './board.entity';
 export class BoardsController {
   constructor(private readonly boardsService: BoardsService) {}
 
+  @Get('hello')
+  getHelloWorld(): string {
+    return 'Hello World!';
+  }
+
   @Get()
   async getAllBoards(): Promise<Board[]> {
     return this.boardsService.getAllBoards();

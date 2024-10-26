@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0.39
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: adminIsCanbbu  # 루트 사용자 비밀번호
+      MYSQL_DATABASE: board-app           # 생성할 데이터베이스 이름
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+
+  nestjs:
+    build: .
+    container_name: nest-container
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app  # 로컬 코드와 컨테이너 동기화
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql  # TypeORM 설정의 host와 일치
+      DB_PORT: 3306
+      DB_USERNAME: root  # MYSQL_USER와 일치
+      DB_PASSWORD: adminIsCanbbu  # MYSQL_PASSWORD와 일치
+      DB_NAME: board-app  # MYSQL_DATABASE와 일치
